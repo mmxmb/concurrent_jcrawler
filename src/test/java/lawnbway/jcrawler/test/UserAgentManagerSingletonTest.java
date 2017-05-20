@@ -16,7 +16,6 @@ import lawnbway.jcrawler.UserAgentManagerSingleton;
 public class UserAgentManagerSingletonTest {
 	private static final String USR_AGENTS_NAME = "usr_agents";
 	private static final String USR_AGENTS_RELATIVE_PATH = "src/main/resources/";
-	HELLO!
 	public static BufferedReader br;
 	public static ArrayList<String> agentList;
 	
