@@ -131,47 +131,7 @@ public class CrawlManager {
         return wordSearchResult;
 	}
 	
-	public void createWordCloud(String url){
-		if(URLUtil.isInvalidUrl(url)) {
-			System.out.println(String.format("ERROR! %s is not a valid URL address", url));
-			System.exit(1);
-		}
-		bePolite(url);	// exclude links from robots.txt from the search
-		AuthorityCheckerSingleton.INSTANCE.setAuthorityUrl(url);
-		words = new StringBuffer(); // all collected bodyText from crawled pages will be stored here
-		
-		while (this.pagesVisited.size() < MAX_PAGES_TO_SEARCH) {
-        	dispatchWordCloudCrawler(url);       
-        }
-		writeWordsToFile(words.toString());
-		makeWordCloud();
-        // close file handles in UserAgent
-        UserAgentManagerSingleton.INSTANCE.cleanup();
-        System.out.println(String.format("**Done** Visited %s web page(s)", this.pagesVisited.size()));		
-	}
 	
-	protected JobResult dispatchWordCloudCrawler(String url) {
-		String currentUrl;   
-        // first search only
-        if(this.pagesToVisit.isEmpty()) {
-            currentUrl = url;
-            this.pagesVisited.add(url);
-        }
-        else
-            currentUrl = this.nextUrl();
-        
-        WordCloudCrawlJob spider = new WordCloudCrawlJob();
-        CrawlResult crawlResult = spider.crawl(currentUrl);
-        WordCollectResult wordCollectResult = new WordCollectResult(false, false, currentUrl); 
-        
-        if (crawlResult.isSuccessful())
-        	wordCollectResult = spider.collectWords();
-        if (wordCollectResult.isSuccessful())
-        	words.append(spider.getBodyText());
-        this.pagesToVisit.addAll(spider.getLinks());
-        
-        return wordCollectResult;
-	}
 	
 	protected void writeWordsToFile(String words){
 		try( PrintWriter out = new PrintWriter("tmp")){
@@ -183,24 +143,6 @@ public class CrawlManager {
 		}
 	}
 	
-	protected void makeWordCloud() {
-		final FrequencyAnalyzer frequencyAnalyzer = new FrequencyAnalyzer();
-		final List<WordFrequency> wordFrequencies;
-		try {
-			wordFrequencies = frequencyAnalyzer.load("tmp");
-			final Dimension dimension = new Dimension(600, 600);
-			final WordCloud wordCloud = new WordCloud(dimension, CollisionMode.PIXEL_PERFECT);
-			wordCloud.setPadding(2);
-			wordCloud.setBackground(new CircleBackground(300));
-			wordCloud.setColorPalette(new ColorPalette(new Color(0x4055F1), new Color(0x408DF1), new Color(0x40AAF1), new Color(0x40C5F1), new Color(0x40D3F1), new Color(0xFFFFFF)));
-			wordCloud.setFontScalar(new SqrtFontScalar(10, 40));
-			wordCloud.build(wordFrequencies);
-			wordCloud.writeToFile("datarank_wordcloud_circle_sqrt_font.png");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
 	
 	/**
 	 * Parses robots.txt, gets list of links that should

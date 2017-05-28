@@ -7,15 +7,9 @@ public class CrawlerTest {
 		
 		long startTime = System.currentTimeMillis();
         CrawlManager spiderManager = new CrawlManager();
-        spiderManager.createWordCloud("https://en.wikipedia.org/wiki/Main_Page");
+        spiderManager.search("https://en.wikipedia.org/wiki/Main_Page","word");
         long endTime   = System.currentTimeMillis();
         long totalTime = endTime - startTime;
         System.out.println("Total time: " + totalTime);
-        
-		
-		
-		
-		//System.out.println(TextCleaningUtil.removeNonLetterChars(test));
-		//System.out.println(TextCleaningUtil.removeArticles(test));
     }
 }
