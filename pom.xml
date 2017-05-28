@@ -54,11 +54,5 @@
     <artifactId>slf4j-nop</artifactId>
     <version>1.7.25</version>
 </dependency>
-
-<dependency>
-    <groupId>com.kennycason</groupId>
-    <artifactId>kumo</artifactId>
-    <version>1.8</version>
-</dependency>
   </dependencies>
 </project>
