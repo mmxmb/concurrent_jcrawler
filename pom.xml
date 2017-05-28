@@ -7,27 +7,56 @@
   <version>1.0-SNAPSHOT</version>
   <name>jcrawler</name>
   <url>http://maven.apache.org</url>
+  <properties>
+      <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
   <dependencies>
-    <dependency>
+
+  <dependency>
+      <!-- jsoup HTML parser library @ http://jsoup.org/ -->
+      <groupId>org.jsoup</groupId>
+      <artifactId>jsoup</artifactId>
+      <version>1.10.2</version>
+  </dependency>
+
+  <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>3.8.1</version>
+      <version>4.12</version>
       <scope>test</scope>
-    </dependency>
+  </dependency>
+  
+  <dependency>
+      <groupId>edu.stanford.nlp</groupId>
+      <artifactId>stanford-corenlp</artifactId>
+      <version>3.7.0</version>
+      <classifier>models</classifier>
+  </dependency>
+  
+  <dependency>
+      <groupId>edu.stanford.nlp</groupId>
+      <artifactId>stanford-corenlp</artifactId>
+      <version>3.7.0</version>
+  </dependency>
 
-    <dependency>
-  <!-- jsoup HTML parser library @ http://jsoup.org/ -->
-  <groupId>org.jsoup</groupId>
-  <artifactId>jsoup</artifactId>
-  <version>1.10.2</version>
+  <dependency>
+      <groupId>edu.stanford.nlp</groupId>
+      <artifactId>stanford-corenlp</artifactId>
+      <version>3.7.0</version>
+      <classifier>models-english</classifier>
+  </dependency>
+
+  <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-nop -->
+<dependency>
+    <groupId>org.slf4j</groupId>
+    <artifactId>slf4j-nop</artifactId>
+    <version>1.7.25</version>
 </dependency>
 
 <dependency>
-  <groupId>junit</groupId>
-  <artifactId>junit</artifactId>
-  <version>4.12</version>
-  <scope>test</scope>
+    <groupId>com.kennycason</groupId>
+    <artifactId>kumo</artifactId>
+    <version>1.8</version>
 </dependency>
-
   </dependencies>
 </project>

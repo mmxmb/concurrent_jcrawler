@@ -1,9 +1,25 @@
 package lawnbway.jcrawler;
 
+import java.awt.Color;
+import java.awt.Dimension;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Deque;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
+import com.kennycason.kumo.CollisionMode;
+import com.kennycason.kumo.WordCloud;
+import com.kennycason.kumo.WordFrequency;
+import com.kennycason.kumo.bg.CircleBackground;
+import com.kennycason.kumo.bg.RectangleBackground;
+import com.kennycason.kumo.font.scale.LinearFontScalar;
+import com.kennycason.kumo.font.scale.SqrtFontScalar;
+import com.kennycason.kumo.nlp.FrequencyAnalyzer;
+import com.kennycason.kumo.palette.ColorPalette;
+
 import lawnbway.jcrawler.util.*;
 
 /**
@@ -19,9 +35,10 @@ import lawnbway.jcrawler.util.*;
  */
 public class CrawlManager {
 	
-	private static final int MAX_PAGES_TO_SEARCH = 1000;
+	private static final int MAX_PAGES_TO_SEARCH = 500;
 	protected Set<String> pagesVisited = new HashSet<String>();
 	protected Deque<String> pagesToVisit = new LinkedList<String>();
+	protected StringBuffer words;
 	
 
 	/**
@@ -72,7 +89,7 @@ public class CrawlManager {
 		JobResult overallResult = new WordSearchResult(false, false, url);
 		
         while (overallResult.isUnsuccessful() && this.pagesVisited.size() < MAX_PAGES_TO_SEARCH) {
-        	overallResult = dispatchCrawler(url, searchWord);       
+        	overallResult = dispatchSearchCrawler(url, searchWord);       
         }
         // close file handles in UserAgent
         UserAgentManagerSingleton.INSTANCE.cleanup();
@@ -92,7 +109,7 @@ public class CrawlManager {
 	 * @param searchWord	the word that the crawler is looking for
 	 * @return result of the call to searchForWord method in CrawlJob class
 	 */
-	protected JobResult dispatchCrawler(String url, String searchWord) {
+	protected JobResult dispatchSearchCrawler(String url, String searchWord) {
 		
 		String currentUrl;   
         // first search only
@@ -103,7 +120,7 @@ public class CrawlManager {
         else
             currentUrl = this.nextUrl();
         
-        CrawlJob spider = new CrawlJob();
+        SearchCrawlJob spider = new SearchCrawlJob();
         CrawlResult crawlResult = spider.crawl(currentUrl);
         WordSearchResult wordSearchResult = new WordSearchResult(false, false, currentUrl); 
         
@@ -112,6 +129,77 @@ public class CrawlManager {
         this.pagesToVisit.addAll(spider.getLinks());
         
         return wordSearchResult;
+	}
+	
+	public void createWordCloud(String url){
+		if(URLUtil.isInvalidUrl(url)) {
+			System.out.println(String.format("ERROR! %s is not a valid URL address", url));
+			System.exit(1);
+		}
+		bePolite(url);	// exclude links from robots.txt from the search
+		AuthorityCheckerSingleton.INSTANCE.setAuthorityUrl(url);
+		words = new StringBuffer(); // all collected bodyText from crawled pages will be stored here
+		
+		while (this.pagesVisited.size() < MAX_PAGES_TO_SEARCH) {
+        	dispatchWordCloudCrawler(url);       
+        }
+		writeWordsToFile(words.toString());
+		makeWordCloud();
+        // close file handles in UserAgent
+        UserAgentManagerSingleton.INSTANCE.cleanup();
+        System.out.println(String.format("**Done** Visited %s web page(s)", this.pagesVisited.size()));		
+	}
+	
+	protected JobResult dispatchWordCloudCrawler(String url) {
+		String currentUrl;   
+        // first search only
+        if(this.pagesToVisit.isEmpty()) {
+            currentUrl = url;
+            this.pagesVisited.add(url);
+        }
+        else
+            currentUrl = this.nextUrl();
+        
+        WordCloudCrawlJob spider = new WordCloudCrawlJob();
+        CrawlResult crawlResult = spider.crawl(currentUrl);
+        WordCollectResult wordCollectResult = new WordCollectResult(false, false, currentUrl); 
+        
+        if (crawlResult.isSuccessful())
+        	wordCollectResult = spider.collectWords();
+        if (wordCollectResult.isSuccessful())
+        	words.append(spider.getBodyText());
+        this.pagesToVisit.addAll(spider.getLinks());
+        
+        return wordCollectResult;
+	}
+	
+	protected void writeWordsToFile(String words){
+		try( PrintWriter out = new PrintWriter("tmp")){
+		    out.println(words);
+		} catch (FileNotFoundException e) {
+			System.out.println("ERROR! Can't create output text file.");
+			e.printStackTrace();
+			System.exit(1);
+		}
+	}
+	
+	protected void makeWordCloud() {
+		final FrequencyAnalyzer frequencyAnalyzer = new FrequencyAnalyzer();
+		final List<WordFrequency> wordFrequencies;
+		try {
+			wordFrequencies = frequencyAnalyzer.load("tmp");
+			final Dimension dimension = new Dimension(600, 600);
+			final WordCloud wordCloud = new WordCloud(dimension, CollisionMode.PIXEL_PERFECT);
+			wordCloud.setPadding(2);
+			wordCloud.setBackground(new CircleBackground(300));
+			wordCloud.setColorPalette(new ColorPalette(new Color(0x4055F1), new Color(0x408DF1), new Color(0x40AAF1), new Color(0x40C5F1), new Color(0x40D3F1), new Color(0xFFFFFF)));
+			wordCloud.setFontScalar(new SqrtFontScalar(10, 40));
+			wordCloud.build(wordFrequencies);
+			wordCloud.writeToFile("datarank_wordcloud_circle_sqrt_font.png");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	/**

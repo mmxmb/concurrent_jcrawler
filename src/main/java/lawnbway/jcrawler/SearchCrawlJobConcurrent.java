@@ -4,7 +4,7 @@ import java.util.concurrent.CountDownLatch;
 
 
 /**
- * CrawlJobConcurrent represents a single unit of crawling 
+ * SearchCrawlJobConcurrent represents a single unit of crawling 
  * activity performed on a specified HTML document. Each crawl job 
  * is performed by one of the threads from the FixedThreadPool that 
  * is instantiated by the CrawlManagerConcurrentObject.
@@ -14,7 +14,7 @@ import java.util.concurrent.CountDownLatch;
  * 
  * @see CrawlJob
  */
-public class CrawlJobConcurrent extends CrawlJob implements Runnable{
+public class SearchCrawlJobConcurrent extends SearchCrawlJob implements Runnable{
 	
 	public Thread thread;
 	public String threadName;
@@ -35,7 +35,7 @@ public class CrawlJobConcurrent extends CrawlJob implements Runnable{
 	 * @param url    the address of the document to be crawled
 	 * @param searchWord    the String to search for on the current page
 	 */
-	CrawlJobConcurrent(String threadName, String url, String searchWord) {
+	SearchCrawlJobConcurrent(String threadName, String url, String searchWord) {
 		this.threadName = threadName;
 		setUrl(url);
 		setSearchWord(searchWord);

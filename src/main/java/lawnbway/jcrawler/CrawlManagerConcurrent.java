@@ -73,7 +73,7 @@ public class CrawlManagerConcurrent extends CrawlManager {
 		overallResult = new WordSearchResult(false, false, url);
 		
         while (overallResult.isUnsuccessful() && this.pagesVisited.size() < MAX_PAGES_TO_SEARCH) {
-        	overallResult = dispatchCrawler(url, searchWord, pool);
+        	overallResult = dispatchSearchCrawler(url, searchWord, pool);
         }
         
         // stops execution of all running/waiting threads
@@ -99,7 +99,7 @@ public class CrawlManagerConcurrent extends CrawlManager {
 	 * @param pool    reference to the fixed thread pool executor service
 	 * @return result of the call to searchForWord method in CrawlJob class
 	 */
-	protected JobResult dispatchCrawler(String url, String searchWord, ExecutorService pool) {
+	protected JobResult dispatchSearchCrawler(String url, String searchWord, ExecutorService pool) {
 		
 		String currentUrl;
 		
@@ -111,7 +111,7 @@ public class CrawlManagerConcurrent extends CrawlManager {
         else
             currentUrl = this.nextUrl();
         
-        CrawlJobConcurrent spider = new CrawlJobConcurrent("Thread-" +  + this.pagesVisited.size(), currentUrl, searchWord);
+        SearchCrawlJobConcurrent spider = new SearchCrawlJobConcurrent("Thread-" +  + this.pagesVisited.size(), currentUrl, searchWord);
         pool.execute(spider); // runs search method in CrawlJob concurrent, and if successful, runs searchForWord
         
     	// wait until the thread finishes the crawlJob before 

@@ -1,8 +1,8 @@
 package lawnbway.jcrawler;
 
 /**
- * JobResult is an abstract class that represents the state
- * of an arbitrary job performed at a specified URL address.
+ * JobResult is an abstract class that represents the a 
+ * single unit of crawling activity performed on a specified HTML document.
  */
 public abstract class JobResult {
 	
