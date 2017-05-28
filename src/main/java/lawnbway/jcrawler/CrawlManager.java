@@ -1,24 +1,11 @@
 package lawnbway.jcrawler;
 
-import java.awt.Color;
-import java.awt.Dimension;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Deque;
 import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Set;
-import com.kennycason.kumo.CollisionMode;
-import com.kennycason.kumo.WordCloud;
-import com.kennycason.kumo.WordFrequency;
-import com.kennycason.kumo.bg.CircleBackground;
-import com.kennycason.kumo.bg.RectangleBackground;
-import com.kennycason.kumo.font.scale.LinearFontScalar;
-import com.kennycason.kumo.font.scale.SqrtFontScalar;
-import com.kennycason.kumo.nlp.FrequencyAnalyzer;
-import com.kennycason.kumo.palette.ColorPalette;
 
 import lawnbway.jcrawler.util.*;
 
@@ -131,6 +118,7 @@ public class CrawlManager {
         return wordSearchResult;
 	}
 	
+
 	
 	
 	protected void writeWordsToFile(String words){
