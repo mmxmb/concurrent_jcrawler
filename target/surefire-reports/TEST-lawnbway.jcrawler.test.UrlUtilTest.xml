@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite tests="4" failures="0" name="lawnbway.jcrawler.test.UrlUtilTest" time="0" errors="0" skipped="0">
+<testsuite tests="4" failures="0" name="lawnbway.jcrawler.test.UrlUtilTest" time="0.001" errors="0" skipped="0">
   <properties>
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
     <property name="sun.boot.library.path" value="/Library/Java/JavaVirtualMachines/jdk1.8.0_102.jdk/Contents/Home/jre/lib"/>
@@ -67,6 +67,6 @@
   </properties>
   <testcase classname="lawnbway.jcrawler.test.UrlUtilTest" name="validUrlShouldBeValid" time="0"/>
   <testcase classname="lawnbway.jcrawler.test.UrlUtilTest" name="invalidUrlShouldBeInvalid" time="0"/>
-  <testcase classname="lawnbway.jcrawler.test.UrlUtilTest" name="getAuthorityShouldReturnHostName" time="0"/>
+  <testcase classname="lawnbway.jcrawler.test.UrlUtilTest" name="getAuthorityShouldReturnHostName" time="0.001"/>
   <testcase classname="lawnbway.jcrawler.test.UrlUtilTest" name="getRootUrlShouldReturnRoot" time="0"/>
 </testsuite>
